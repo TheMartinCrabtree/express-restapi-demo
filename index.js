@@ -50,6 +50,17 @@ const findUser=(userID)=>{
     })
 }
 
+const validateUser=(paramsBody)=>{
+    const schema = {
+        name_first:     Joi.string().min(2).required(),
+        name_last:      Joi.string().min(2),
+        subscriber:     Joi.boolean(),
+        comments:       Joi.number().integer().min(0)
+    };
+
+    return Joi.validate(paramsBody, schema);
+}
+
 const handleGet=(req, res)=>{
     res.send("Root Get Request");
 };
@@ -72,21 +83,14 @@ const getUser=(req, res)=>{
 
 const addUser=(req, res)=>{
      
-    const schema = {
-        name_first:     Joi.string().min(2).required(),
-        name_last:      Joi.string().min(2),
-        subscriber:     Joi.boolean(),
-        comments:       Joi.number().integer().min(0)
-    };
-    
-    const resultJoi = Joi.validate(req.body, schema);
-    
-
+    const resultJoi = validateUser(req.body);
+ 
     if(resultJoi.error){
         // send response with 404 bad request error
         res.status(400).send(`Bad Request: ${resultJoi.error.details[0].message} `);
     }
-    else{
+    else
+    {
         const userObj ={
             id: userData.length+1,
             name_first: req.body.name_first,
@@ -103,8 +107,33 @@ const addUser=(req, res)=>{
 };
 
 const updateUser=(req,res)=>{
+    const userObj = findUser(req.params.id);
+    const resultJoi = validateUser(req.body)
 
+    if(resultJoi.error){
+        // send response with 404 bad request error
+        res.status(400).send(`Bad Request: ${resultJoi.error.details[0].message} `);
+        return;
+    }
+    else
+    {
+        userObj.name_first = req.body.name_first;
+        res.send(userObj);
+    }
 };
+
+const deleteUser=(req, res)=>{
+    const userObj = findUser(req.params.id);
+    const resultJoi = validateUser(req.body)
+
+    if(resultJoi.error){
+        // send response with 404 bad request error
+        res.status(400).send(`Bad Request: ${resultJoi.error.details[0].message} `);
+        return;
+    }   
+
+    
+}
 
 // ROUTES 
 app.get("/", handleGet);
@@ -116,3 +145,5 @@ app.get("/user/:id", getUser);
 app.post("/users", addUser);
 
 app.put("/users/:id", updateUser);
+
+app.delete("/users/:id", deleteUser);
