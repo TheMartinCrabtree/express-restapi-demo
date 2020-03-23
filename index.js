@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 3003;
 
 app.listen(port, ()=>console.log(`listening on port: ${port}`));
+app.use(express.json());
 
 const userData = [
     {
@@ -40,21 +41,19 @@ const userData = [
         "subscriber": true,
         "comments": 0
     }
-  ]
+  ];
 
 const handleGet=(req, res)=>{
     res.send("Root Get Request");
-}
+};
 
 const getAllUsers=(req, res)=>{
     res.send([1,2,3,4])
-}
+};
 
 const getUser=(req, res)=>{
     // read request req.params and/or req.query
     const userObj = userData.find((user)=>{
-        console.log("user:", user.id)
-        debugger
         return user.id === parseInt(req.params.id);
     })
     if(!userObj){
@@ -64,7 +63,30 @@ const getUser=(req, res)=>{
         res.send(userObj);
     }
 
-}
+};
+
+const addUser=(req, res)=>{
+    
+    
+    if(!req.body.name_first || req.body.name_first.length < 2){
+        // send response with 404 bad request error
+        res.status(400).send("Bad Request.");
+    }
+    else{
+        const userObj ={
+            id: userData.length+1,
+            name_first: req.body.name_first,
+            name_last: req.body.name_last,
+            subscriber: req.body.subscriber,
+            comments: req.body.comments
+        };
+        // add new user to database
+        userData.push(userObj);
+        // return the user object that was just added
+        res.send(userObj);
+    }
+    
+};
 
 // ROUTES 
 app.get("/", handleGet);
@@ -73,5 +95,5 @@ app.get("/users", getAllUsers);
 
 app.get("/user/:id", getUser);
 
-
+app.post("/users", addUser);
 
