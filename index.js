@@ -112,8 +112,7 @@ const updateUser=(req,res)=>{
 
     if(resultJoi.error){
         // send response with 404 bad request error
-        res.status(400).send(`Bad Request: ${resultJoi.error.details[0].message} `);
-        return;
+        return res.status(400).send(`Bad Request: ${resultJoi.error.details[0].message} `);
     }
     else
     {
@@ -128,11 +127,14 @@ const deleteUser=(req, res)=>{
 
     if(resultJoi.error){
         // send response with 404 bad request error
-        res.status(400).send(`Bad Request: ${resultJoi.error.details[0].message} `);
-        return;
+        return res.status(400).send(`Bad Request: ${resultJoi.error.details[0].message} `);
     }   
 
-    
+    // find index to remove, and update userData
+    const index = userData.indexOf(userObj);
+    userData.splice(index, 1);
+
+    res.send(userObj);
 }
 
 // ROUTES 
