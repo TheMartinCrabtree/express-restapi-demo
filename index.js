@@ -11,10 +11,17 @@ const getAllUsers=(req, res)=>{
     res.send([1,2,3,4])
 }
 
+const getUser=(req, res)=>{
+    // read request params
+    res.send(req.params.id);
+}
+
 // ROUTES
 app.get("/", handleGet);
 
 app.get("/users", getAllUsers);
+
+app.get("/user/:id", getUser);
 
 // 
 
