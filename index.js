@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3003;
@@ -43,6 +44,12 @@ const userData = [
     }
   ];
 
+const findUser=(userID)=>{
+    return userData.find((user)=>{
+        return user.id === parseInt(userID);
+    })
+}
+
 const handleGet=(req, res)=>{
     res.send("Root Get Request");
 };
@@ -53,9 +60,7 @@ const getAllUsers=(req, res)=>{
 
 const getUser=(req, res)=>{
     // read request req.params and/or req.query
-    const userObj = userData.find((user)=>{
-        return user.id === parseInt(req.params.id);
-    })
+    const userObj = findUser(req.params.id)
     if(!userObj){
         res.status(404).send("User not found.");
     }
@@ -66,11 +71,20 @@ const getUser=(req, res)=>{
 };
 
 const addUser=(req, res)=>{
+     
+    const schema = {
+        name_first:     Joi.string().min(2).required(),
+        name_last:      Joi.string().min(2),
+        subscriber:     Joi.boolean(),
+        comments:       Joi.number().integer().min(0)
+    };
     
+    const resultJoi = Joi.validate(req.body, schema);
     
-    if(!req.body.name_first || req.body.name_first.length < 2){
+
+    if(resultJoi.error){
         // send response with 404 bad request error
-        res.status(400).send("Bad Request.");
+        res.status(400).send(`Bad Request: ${resultJoi.error.details[0].message} `);
     }
     else{
         const userObj ={
@@ -88,6 +102,10 @@ const addUser=(req, res)=>{
     
 };
 
+const updateUser=(req,res)=>{
+
+};
+
 // ROUTES 
 app.get("/", handleGet);
 
@@ -97,3 +115,4 @@ app.get("/user/:id", getUser);
 
 app.post("/users", addUser);
 
+app.put("/users/:id", updateUser);
