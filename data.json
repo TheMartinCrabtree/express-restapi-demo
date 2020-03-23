@@ -1,0 +1,37 @@
+[
+    {
+        "name_first": "Adi",
+        "name_last": "Tariq",
+        "subscriber": true,
+        "comments": 7
+    },
+    {
+
+        "name_first": "Michelle",
+        "name_last": "Tran",
+        "subscriber": false,
+        "comments": 2
+    },
+    {
+
+        "name_first": "Angela",
+        "name_last": "Mann",
+        "subscriber": true,
+        "comments": 10
+    },
+    {
+
+        "name_first": "Daphne",
+        "name_last": "Chen",
+        "subscriber": false,
+        "comments": 4
+    },
+    {
+
+        "name_first": "Amanda",
+        "name_last": "Burger",
+        "subscriber": true,
+        "comments": 0
+    }
+    
+  ]
